@@ -1,0 +1,24 @@
+branches:
+    only:
+      - master
+  language: ruby
+  services:
+    - docker
+
+stages:
+  - Build
+  - Release
+
+jobs:
+  include:
+    - stage: Build
+      arch: amd64
+      os: linux
+      script:
+        - make build
+
+    - stage: Release
+      arch: amd64
+      os: linux
+      script:
+        - make release

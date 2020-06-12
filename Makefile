@@ -1,2 +1,5 @@
 build:
-	echo "buidl"
+	echo "build"
+
+release:
+    echo "release"
