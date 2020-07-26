@@ -1,5 +1,7 @@
 const nodeExternals = require("webpack-node-externals");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FileListPlugin = require("./webpack.tet.plugin");
+const HelloCompilationPlugin = require("./webpack.tet2.plugin");
 
 module.exports = {
     entry: {
@@ -33,7 +35,9 @@ module.exports = {
             title: "Custom template",
             filename: "layout.html",
             template: "!!prerender-loader?string!src/layout.html"
-        })
+        }),
+        new FileListPlugin(),
+        new HelloCompilationPlugin()
     ],
     optimization: {
         minimize: true
