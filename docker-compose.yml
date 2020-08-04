@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  app:
+    image: ${IMG}
+
+  acceptance:
+    image: golang:1.14.6-stretch
+    volumes:
+      - ./:${CWD}
+    working_dir: ${CWD}
+    command: /bin/sh -c "go test -v ${CWD}/tests/..."

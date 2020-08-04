@@ -1,10 +1,40 @@
+REPO = github.com/imega/iul
+IMG = imega/iul
+TAG = latest
+CWD = /go/src/$(REPO)
+GO_IMG = golang:1.14.6-alpine3.12
 NODE_IMG = node:14.3.0-alpine3.11
 
 build:
+	@docker build \
+		--build-arg GO_IMG=$(GO_IMG) \
+		--build-arg CWD=$(CWD) \
+		-t $(IMG):$(TAG) .
+
+build2:
+	npm run build
+	node dist/ssr.js
+	go run -tags=dev assets/generate.go
+	go build
 	echo "build"
 
-release:
+release: acceptance
 	echo "release"
 
 node_modules:
 	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) npm install
+
+clean:
+	docker-compose rm -sfv
+
+dev:
+	docker-compose up -d
+
+acceptance: down
+	@IMG=$(IMG) TAG=$(TAG) GO_IMG=$(GO_IMG) CWD=$(CWD) docker-compose up -d --build --scale acceptance=0
+	@IMG=$(IMG) TAG=$(TAG) GO_IMG=$(GO_IMG) CWD=$(CWD) docker-compose up --abort-on-container-exit acceptance
+
+down:
+	@IMG=$(IMG) TAG=$(TAG) GO_IMG=$(GO_IMG) CWD=$(CWD) docker-compose down -v --remove-orphans
+
+test: acceptance
