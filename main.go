@@ -14,6 +14,7 @@ var logger = initer.InitLogger("iul")
 func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", defaultURI(http.FileServer(Assets)))
+	mux.HandleFunc("/api/upload", uploadHandler)
 
 	initer.InitHTTP(logger, mux, "")
 
