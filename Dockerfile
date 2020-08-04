@@ -7,7 +7,7 @@ WORKDIR $CWD
 
 COPY . .
 
-RUN go build -v -o rel/app
+RUN go run -tags=dev assets/generate.go && go build -v -o rel/app
 
 
 

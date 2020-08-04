@@ -29,7 +29,7 @@ module.exports = {
         ],
         "@babel/plugin-proposal-optional-chaining",
         "@babel/plugin-proposal-nullish-coalescing-operator",
-        "@babel/plugin-proposal-class-properties",
+        ["@babel/plugin-proposal-class-properties", { loose: true }],
         "@babel/plugin-transform-runtime",
         "@babel/plugin-proposal-object-rest-spread",
         "transform-react-remove-prop-types"

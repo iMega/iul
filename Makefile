@@ -5,18 +5,13 @@ CWD = /go/src/$(REPO)
 GO_IMG = golang:1.14.6-alpine3.12
 NODE_IMG = node:14.3.0-alpine3.11
 
-build:
+build: node_modules
+	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) \
+		sh -c "npm run build && node dist/ssr.js && rm dist/ssr.js"
 	@docker build \
 		--build-arg GO_IMG=$(GO_IMG) \
 		--build-arg CWD=$(CWD) \
 		-t $(IMG):$(TAG) .
-
-build2:
-	npm run build
-	node dist/ssr.js
-	go run -tags=dev assets/generate.go
-	go build
-	echo "build"
 
 release: build acceptance login
 	@docker push $(IMG):$(TAG)
