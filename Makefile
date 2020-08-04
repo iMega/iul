@@ -18,8 +18,8 @@ build2:
 	go build
 	echo "build"
 
-release: build acceptance
-	echo "release"
+release: build acceptance login
+	@docker push $(IMG):$(TAG)
 
 node_modules:
 	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) npm install
@@ -36,5 +36,8 @@ acceptance: down
 
 down:
 	@IMG=$(IMG) TAG=$(TAG) GO_IMG=$(GO_IMG) CWD=$(CWD) docker-compose down -v --remove-orphans
+
+login:
+	@docker login --username $(DOCKER_USER) --password $(DOCKER_PASS)
 
 test: acceptance
