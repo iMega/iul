@@ -1,9 +1,9 @@
-import gql from "graphql-tag";
-import { graphql, compose } from "react-apollo";
+import { gql } from "@apollo/client";
+import { graphql } from "@apollo/client/react/hoc";
 
 const generateDocumentND = gql`
-    mutation generateDocument() {
-        document()
+    mutation updateFragment($in: Object) {
+        document(input: $in)
             @rest(
                 type: "document"
                 path: "/gendoc"
@@ -20,4 +20,4 @@ const generateDocument = graphql(generateDocumentND, {
     options: () => ({ errorPolicy: "ignore" })
 });
 
-export default compose(generateDocument);
+export default generateDocument;
