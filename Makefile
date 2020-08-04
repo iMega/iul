@@ -18,7 +18,7 @@ build2:
 	go build
 	echo "build"
 
-release: acceptance
+release: build acceptance
 	echo "release"
 
 node_modules:

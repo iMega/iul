@@ -1,24 +1,17 @@
 branches:
   only:
-  - master
+    - master
   language: ruby
   services:
-  - docker
+    - docker
 stages:
-- Build
-- Release
+  - Release
 jobs:
-  include:
-  - stage: Build
-    arch: amd64
-    os: linux
-    script:
-    - make build
   - stage: Release
     arch: amd64
     os: linux
     script:
-    - make release
+      - make release
 notifications:
   slack:
     secure: Lt8GvAThFi07nQ1CFzObK4Fz8pcYpXDMiv7atA4tWX2BxxG4acoR+hfL1EwKAV2jWbXCwW4de0Dp10IsWRgBCr8l9b0Bg82i7naNEvsA232HZYcS7CmgPxduQsGXozPztj++YJmg01sNYhOcSU/4Qxb1TPJWj4gZU9TEPXxpf2Z3oM7ZkfrJqS0D0uOCjVGPqC2oWgNPhRuEmV1jd52T9Ymep7CkhsYN+v9yX7m19O4Rh0joeYOtfwdyD7qKqXcZ9KZo8nJ24dFCWLzEHWsMTf9etubbYNerfjcfSeUD3uU9gftwdSOcPdVycM7ItDR7/BKWN/byRPndgc+YQvDpZh53/3FttMu0tJNMi+BQ60YqYMNNO78OOc2o96CeYvXmcjXpaDrAGAmJoWvCBazWjQwCtqY+i3sWP1w+D9tJUJkmsFMqIgdUK4RtedVjb0e1XhjDJGC+FpW31yvLJUHtoOOAaf7UqACDM6vH4MjI9TO473VvC8/PwOfXWaxssrIStXjkJrtHmrz9FzhgyykJPblRSGehKPy2vps5pE7OzrQHoCMpvt/soOqgvXJpXcGj7wV/zOptVzLJE7UKmHV/6w/PgsR4FSR1wZVtkNXsoxQwsWR4mEB9Iu5bTexuFNAopIcgRRb5tMvML/uJKj77JMwP+G2IA4p36fCcQ2jB+xs=
