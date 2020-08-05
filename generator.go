@@ -75,7 +75,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		},
 		File: aboutFile{
 			Name: in.Files[0].Name,
-			Size: strconv.Itoa(int(in.Files[0].Size)),
+			Size: in.Files[0].Size,
 			MD5:  in.Files[0].MD5,
 		},
 	}

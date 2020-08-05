@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/imega/iul/health"
 	"github.com/imega/iul/initer"
 	"github.com/imega/iul/serverenv"
 )
@@ -20,6 +21,11 @@ func main() {
 	mux.HandleFunc("/api/upload", uploadHandler)
 
 	initer.InitHTTP(logger, mux, "")
+	initer.InitGRPC(logger, nil)
+
+	health.RegisterHealthCheckFunc(func() bool {
+		return true
+	})
 
 	logger.Info("server is started")
 	err := serverenv.LoopUntilShutdown(shutdownTimeout * time.Second)

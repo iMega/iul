@@ -7,12 +7,13 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/dustin/go-humanize"
 	"github.com/improbable-eng/go-httpwares/logging/logrus/ctxlogrus"
 )
 
 type fileInfo struct {
 	Name string `json:"name"`
-	Size int64  `json:"size"`
+	Size string `json:"size"`
 	MD5  string `json:"md5"`
 }
 
@@ -43,7 +44,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 			responseFiles = append(responseFiles, fileInfo{
 				Name: files[i].Filename,
-				Size: files[i].Size,
+				Size: humanize.Bytes(uint64(files[i].Size)),
 				MD5:  hashFileMD5(file),
 			})
 		}

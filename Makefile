@@ -17,7 +17,7 @@ lint:
 	@-docker run --rm -t -v $(CURDIR):$(CWD) -w $(CWD) -e GOFLAGS=-mod=vendor \
 		golangci/golangci-lint golangci-lint run
 
-release: build acceptance login
+release: build login
 	@docker push $(IMG):$(TAG)
 
 node_modules:
