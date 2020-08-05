@@ -9,17 +9,23 @@ import (
 	"github.com/imega/iul/serverenv"
 )
 
-var logger = initer.InitLogger("iul")
+const shutdownTimeout = 15
 
 func main() {
+	var logger = initer.InitLogger("iul")
+
 	mux := http.NewServeMux()
 	mux.Handle("/", defaultURI(http.FileServer(Assets)))
+	mux.HandleFunc("/api/gendoc", generateHandler)
 	mux.HandleFunc("/api/upload", uploadHandler)
 
 	initer.InitHTTP(logger, mux, "")
 
 	logger.Info("server is started")
-	serverenv.LoopUntilShutdown(15 * time.Second)
+	err := serverenv.LoopUntilShutdown(shutdownTimeout * time.Second)
+	if err != nil {
+		logger.Errorf("failed to shutdown server, %s", err)
+	}
 	logger.Info("server is stopped")
 }
 

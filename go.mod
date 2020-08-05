@@ -3,7 +3,7 @@ module github.com/imega/iul
 go 1.13
 
 require (
-	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.6.0 // indirect
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.6.0
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0 // indirect
 	github.com/improbable-eng/go-httpwares v0.0.0-20200609095714-edc8019f93cc

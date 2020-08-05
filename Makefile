@@ -5,13 +5,17 @@ CWD = /go/src/$(REPO)
 GO_IMG = golang:1.14.6-alpine3.12
 NODE_IMG = node:14.3.0-alpine3.11
 
-build: node_modules
+build: lint node_modules
 	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) \
 		sh -c "npm run build && node dist/ssr.js && rm dist/ssr.js"
 	@docker build \
 		--build-arg GO_IMG=$(GO_IMG) \
 		--build-arg CWD=$(CWD) \
 		-t $(IMG):$(TAG) .
+
+lint:
+	@-docker run --rm -t -v $(CURDIR):$(CWD) -w $(CWD) -e GOFLAGS=-mod=vendor \
+		golangci/golangci-lint golangci-lint run
 
 release: build acceptance login
 	@docker push $(IMG):$(TAG)
@@ -35,4 +39,7 @@ down:
 login:
 	@docker login --username $(DOCKER_USER) --password $(DOCKER_PASS)
 
-test: acceptance
+deploy:
+	@curl -s -X POST -H "TOKEN: $(DEPLOY_TOKEN)" https://d.imega.ru -d '{"namespace":"imega", "project_name":"iul", "tag":"$(TAG)"}'
+
+test: build acceptance

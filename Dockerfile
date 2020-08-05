@@ -16,6 +16,7 @@ FROM $GO_IMG
 ARG CWD
 WORKDIR /
 EXPOSE 8080
+RUN apk add --upd wkhtmltopdf ttf-liberation
 COPY --from=builder $CWD/rel/app .
 
 CMD ["/app"]
