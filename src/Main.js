@@ -16,13 +16,15 @@ const filename = "filename";
 const doc = "doc";
 const version = "version";
 const revision = "revision";
+const contributors = "contributors";
 const Fields = {
     title,
     num,
     filename,
     doc,
     version,
-    revision
+    revision,
+    contributors
 };
 
 const HIDE_DROPZONE = -170;
@@ -96,6 +98,27 @@ const Main = ({ generateDocument }) => {
                 djsConfig={djsConfig}
                 eventHandlers={eventHandlers(SetPreviewZonebottom, setFiles)}
             />
+            <TableContributors>
+                <tbody>
+                    {[0, 1, 2].map(i => (
+                        <tr>
+                            <Td
+                                contentEditable={true}
+                                id={Fields.contributors + i + "title"}
+                            />
+                            <Td
+                                contentEditable={true}
+                                id={Fields.contributors + i + "name"}
+                            />
+                            <Th />
+                            <Td
+                                contentEditable={true}
+                                id={Fields.contributors + i + "date"}
+                            />
+                        </tr>
+                    ))}
+                </tbody>
+            </TableContributors>
             <Action>
                 <Button onClick={Generate(generateDocument, files)}>
                     Создать PDF...
@@ -151,12 +174,19 @@ const PreviewZone = styled.div(
 
 const CenterContent = styled.div({
     display: "grid",
+    gridGap: "2em",
     gridTemplateColumns: "auto minmax(200px, 50em) auto",
-    gridTemplateAreas: `". table ." ". tablefile ." ". dropzone ." ". action ."`
+    gridTemplateAreas: `". table ." ". tablefile ." ". dropzone ." ". contributors ." ". action ."`
 });
 
 const Table = styled.table({
     gridArea: "table",
+    border: "1px solid #264653",
+    borderCollapse: "collapse"
+});
+
+const TableContributors = styled.table({
+    gridArea: "contributors",
     border: "1px solid #264653",
     borderCollapse: "collapse"
 });
@@ -207,13 +237,21 @@ const Button = styled.button({
     }
 });
 
-const Generate = (generateDocument, files) => () => {
+const Generate = (generateDocument, files = []) => () => {
     let req = { files };
+
     const fields = Object.keys(Fields);
     fields.forEach(f =>
-        Object.assign(req, { [f]: document.getElementById(f).innerText })
+        Object.assign(req, { [f]: document.getElementById(f)?.innerText })
     );
-    generateDocument({ variables: { in: req } });
+
+    const contributors = [0, 1, 2].map(i => ({
+        title: document.getElementById("contributors" + i + "title").innerText,
+        name: document.getElementById("contributors" + i + "name").innerText,
+        date: document.getElementById("contributors" + i + "date").innerText
+    }));
+
+    generateDocument({ variables: { in: { ...req, contributors } } });
 };
 
 export default Storage(Main);
