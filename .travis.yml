@@ -12,12 +12,12 @@ jobs:
     arch: amd64
     os: linux
     script:
-      - make release
+      - make release TAG=`echo $TRAVIS_COMMIT | cut -c -7`
   - stage: Deploy
     arch: amd64
     os: linux
     script:
-      - make deploy
+      - make deploy TAG=`echo $TRAVIS_COMMIT | cut -c -7`
 
 notifications:
   slack:

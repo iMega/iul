@@ -5,7 +5,7 @@ CWD = /go/src/$(REPO)
 GO_IMG = golang:1.14.6-alpine3.12
 NODE_IMG = node:14.3.0-alpine3.11
 
-build: lint node_modules
+build: node_modules
 	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) \
 		sh -c "npm run build && node dist/ssr.js && rm dist/ssr.js"
 	@docker build \
