@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -33,12 +34,10 @@ module.exports = {
             context: __dirname,
             manifest: require("./manifest.vendor.json"),
             name: "vendor"
+        }),
+        new CopyPlugin({
+            patterns: [{ from: "src/icons" }]
         })
-        // new HtmlWebpackPlugin({
-        //     title: "Custom template",
-        //     filename: "layout.html",
-        //     template: "!!prerender-loader?string!src/layout.html"
-        // })
     ],
     optimization: {
         minimize: true,
