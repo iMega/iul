@@ -63,6 +63,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		logger.Errorf("failed to marshal response, %s", err)
 	}
 
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.Write(b)
 }
 

@@ -6,8 +6,6 @@ import {
     InMemoryCache
 } from "@apollo/client";
 import { RestLink } from "apollo-link-rest";
-// import { Headers } from "node-fetch"; // undefined bind
-// global.Headers = require("fetch-headers/headers-es5.min.js");
 
 if (global.Headers == null) {
     global.Headers = require("fetch-headers");

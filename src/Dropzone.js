@@ -25,8 +25,8 @@ const eventHandlers = (SetPreviewZonebottom, setFile) => ({
     sending: (file, xhr, formData) => {
         formData.append("key", file.key);
     },
-    success: (_, body) => {
-        const { files } = JSON.parse(body);
+    success: (_, { files }) => {
+        // const { files } = JSON.parse(body);
         setFile(files);
     },
     queuecomplete: () => {

@@ -9,12 +9,7 @@ import Connection from "./Connection";
 import Normalize from "./Normalize.js";
 
 const r = renderToStringWithData(<Connection />).then(content => {
-    // const cache = apolloClient.extract();
     const { ids, css, html } = extractCritical(content);
-    // const srcLink = CLIENT_COMP_URI;
-    // const env = {
-    //     STYLES_NAMESPACE: "__ids"
-    // };
 
     return ReactDOM.renderToString(
         <React.Fragment>

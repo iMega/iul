@@ -7,6 +7,8 @@ WORKDIR $CWD
 COPY . .
 
 RUN apk add --upd musl-dev gcc && \
+    go get -u github.com/go-bindata/go-bindata/... && \
+    go-bindata -nocompress -o pdf.go pdf.html && \
     #go get github.com/fullstorydev/grpcurl@v1.7.0 && \
     #go install github.com/fullstorydev/grpcurl/cmd/grpcurl && \
     #go list ./... | grep -v 'assets\|tests' | xargs go test && \

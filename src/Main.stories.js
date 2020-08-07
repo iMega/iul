@@ -1,8 +1,8 @@
 import React from "react";
 
-import Main from "./Main.js";
+import Connection from "./Connection";
 
-const MainStory = () => <Main />;
+const MainStory = () => <Connection />;
 
 MainStory.story = {
     name: "Main"
@@ -13,6 +13,6 @@ export { MainStory };
 export default {
     title: "Test",
     parameters: {
-        component: Main
+        component: Connection
     }
 };

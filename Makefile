@@ -15,19 +15,13 @@ build: lint node_modules
 
 lint:
 	@-docker run --rm -t -v $(CURDIR):$(CWD) -w $(CWD) -e GOFLAGS=-mod=vendor \
-		golangci/golangci-lint golangci-lint run
+		golangci/golangci-lint golangci-lint run -v
 
-release: build login
+release: build acceptance login
 	@docker push $(IMG):$(TAG)
 
 node_modules:
 	@docker run --rm -v $(CURDIR):/data -w /data $(NODE_IMG) npm install
-
-clean:
-	docker-compose rm -sfv
-
-dev:
-	docker-compose up -d
 
 acceptance: down
 	@IMG=$(IMG) TAG=$(TAG) GO_IMG=$(GO_IMG) CWD=$(CWD) docker-compose up -d --build --scale acceptance=0
