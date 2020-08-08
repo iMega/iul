@@ -2,6 +2,7 @@ ARG GO_IMG
 
 FROM $GO_IMG as builder
 ARG CWD
+ARG TAG
 WORKDIR $CWD
 
 COPY . .
@@ -13,7 +14,7 @@ RUN apk add --upd musl-dev gcc && \
     #go install github.com/fullstorydev/grpcurl/cmd/grpcurl && \
     #go list ./... | grep -v 'assets\|tests' | xargs go test && \
     go run -tags=dev assets/generate.go && \
-    go build -v -o rel/app
+    go build -ldflags "-X main.tag=$TAG" -v -o rel/app
 
 
 

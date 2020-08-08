@@ -11,6 +11,7 @@ build: node_modules
 	@docker build \
 		--build-arg GO_IMG=$(GO_IMG) \
 		--build-arg CWD=$(CWD) \
+		--build-arg TAG=$(TAG) \
 		-t $(IMG):$(TAG) .
 
 lint:

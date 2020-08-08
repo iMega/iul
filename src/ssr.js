@@ -10,7 +10,7 @@ import Normalize from "./Normalize.js";
 
 const r = renderToStringWithData(<Connection />).then(content => {
     const { ids, css, html } = extractCritical(content);
-
+    const tag = process.env.TAG || "latest";
     return ReactDOM.renderToString(
         <React.Fragment>
             <html>
@@ -23,8 +23,8 @@ const r = renderToStringWithData(<Connection />).then(content => {
                 </head>
                 <body>
                     <div id="root" dangerouslySetInnerHTML={{ __html: html }} />
-                    <script src="/vendor.js" />
-                    <script src="/client.js" />
+                    <script src={`/${tag}/vendor.js`} />
+                    <script src={`/${tag}/client.js`} />
                 </body>
             </html>
         </React.Fragment>

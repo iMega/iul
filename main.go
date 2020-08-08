@@ -12,6 +12,8 @@ import (
 
 const shutdownTimeout = 15
 
+var tag string
+
 func main() {
 	var logger = initer.InitLogger("iul")
 
@@ -27,19 +29,28 @@ func main() {
 		return true
 	})
 
-	logger.Info("server is started")
+	logger.Infof("server is started, tag: %s", tag)
 	err := serverenv.LoopUntilShutdown(shutdownTimeout * time.Second)
 	if err != nil {
 		logger.Errorf("failed to shutdown server, %s", err)
 	}
-	logger.Info("server is stopped")
+	logger.Infof("server is stopped, tag: %s", tag)
 }
 
 func defaultURI(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var estimatedURL string
+
 		if strings.HasSuffix(r.URL.Path, "/") {
-			r.URL.Path = "/index.htm"
+			estimatedURL = "/index.htm"
 		}
+
+		if strings.HasPrefix(r.URL.Path, "/"+tag) {
+			estimatedURL = strings.Replace(r.URL.Path, "/"+tag, "", 1)
+		}
+
+		r.URL.Path = estimatedURL
+
 		next.ServeHTTP(w, r)
 	})
 }
