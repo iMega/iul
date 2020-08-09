@@ -126,6 +126,12 @@ const Style = `
         line-height: 1;
         font-family: inherit;
         font-size: 100%;
+        color: var(--fontColor);
+        transition: var(--tr);
+    }
+
+    textarea{
+        white-space: break-spaces;
     }
 
     input,
@@ -518,9 +524,12 @@ const Style = `
 
     body {
         font-family: var(--editor-font-paragraph);
+        color: var(--fontColor);
+        background-color: var(--bgColor);
+        transition: background-color 0.4s ease-out;
     }
 
-    /*
+/*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
  */
@@ -535,8 +544,8 @@ const Style = `
 .dropzone .dz-preview {
     position: relative;
     display: inline-block;
-    width: 120px;
-    margin: 0.5em;
+    /*width: 120px;*/
+    margin: 0 0.5em;
 }
 .dropzone .dz-preview .dz-progress {
     display: block;
@@ -785,12 +794,12 @@ const Style = `
     box-sizing: border-box;
 }
 
-.dropzone {
+/*.dropzone {
     min-height: 150px;
     border: 2px solid rgba(0, 0, 0, 0.3);
     background: white;
     padding: 20px 20px;
-}
+}*/
 .dropzone.dz-clickable {
     cursor: pointer;
 }
@@ -827,8 +836,8 @@ const Style = `
     position: relative;
     display: inline-block;
     vertical-align: top;
-    margin: 16px;
-    min-height: 100px;
+    /*margin: 16px;
+    min-height: 100px;*/
 }
 .dropzone .dz-preview:hover {
     z-index: 1000;
@@ -852,7 +861,7 @@ const Style = `
     transition: opacity 0.2s linear;
 }
 .dropzone .dz-preview .dz-remove {
-    font-size: 14px;
+    font-size: 0.9em;
     text-align: center;
     display: block;
     cursor: pointer;
@@ -914,8 +923,8 @@ const Style = `
 .dropzone .dz-preview .dz-image {
     border-radius: 20px;
     overflow: hidden;
-    width: 120px;
-    height: 120px;
+    width: 6em;
+    height: 6em;
     position: relative;
     display: block;
     z-index: 10;
@@ -1050,19 +1059,15 @@ const Style = `
     border-bottom: 6px solid #be2626;
 }
 
-/* Filepicker CSS */
-.filepicker {
-    font-family: sans-serif;
-}
-
 div.filepicker {
     text-align: center;
-    padding: 5px;
-    background-color: #e1e1e1;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    min-height: 60px;
-    border: 2px solid #c7c7c7;
+    /*padding: 5px;*/
+    borderTop: 1px solid var(--borderColorPanel);
+    background-color: var(--bgColorPanel);
+    /*border-top-left-radius: 4px;*/
+    /*border-top-right-radius: 4px;*/
+    /*min-height: 60px;*/
+    /*border: 2px solid #c7c7c7;*/
 }
 
 /* Icon */
@@ -1120,6 +1125,43 @@ div.filepicker {
     border-style: solid;
     border-color: white transparent transparent #920035;
 }
+
+
+.radio-group .radio-group-option {
+    cursor: pointer;
+    height: 16px; }
+    .radio-group .radio-group-option svg {
+      width: 16px;
+      height: 16px; }
+      .radio-group .radio-group-option svg .radio-group-circle-outer {
+        fill: var(--borderColorWE); }
+      .radio-group .radio-group-option svg .radio-group-circle {
+        fill: var(--bgInput); }
+      .radio-group .radio-group-option svg .radio-group-circle-inner {
+        visibility: hidden; }
+    .radio-group .radio-group-option .radio-group-label {
+      padding-left: 4px;
+      color: var(--fontColor); }
+
+    .radio-group .radio-group-option.is-checked svg .radio-group-circle-outer {
+      fill: #1a91eb; }
+    .radio-group .radio-group-option.is-checked svg .radio-group-circle-inner {
+      visibility: visible;
+      fill: #1a91eb; }
+
+  .radio-group.is-disabled .radio-group-option {
+    cursor: not-allowed;
+    opacity: 0.6; }
+
+  .radio-group.is-disabled .radio-group-label {
+    cursor: auto; }
+
+  .radio-group:not(.is-horizontal) .radio-group-option:not(:last-child) {
+    margin-bottom: 16px; }
+
+  .radio-group.is-horizontal .radio-group-option:not(:last-child) {
+    margin-right: 16px; }
+
 
 `;
 

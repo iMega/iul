@@ -11,7 +11,8 @@ if (global.Headers == null) {
     global.Headers = require("fetch-headers");
 }
 
-import Main from "./Main";
+import Logic from "./Logic";
+import Documentor, { docsND } from "./Documentor";
 
 const restLink = new RestLink({
     uri: "/api",
@@ -20,6 +21,7 @@ const restLink = new RestLink({
             uri: "/api",
             responseTransformer: async response => {
                 response.blob().then(blob => {
+                    console.log("BLOB", blob);
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
                     link.download = "iul.pdf";
@@ -33,14 +35,22 @@ const restLink = new RestLink({
     credentials: "same-origin"
 });
 
+const cache = new InMemoryCache({
+    typePolicies: {
+        Query: {
+            fields: { docs: { read: Documentor.read } }
+        }
+    }
+});
+
 const client = new ApolloClient({
     link: ApolloLink.from([restLink]),
-    cache: new InMemoryCache({})
+    cache
 });
 
 const Connection = () => (
     <ApolloProvider client={client}>
-        <Main />
+        <Logic />
     </ApolloProvider>
 );
 

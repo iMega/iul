@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
 
+import { useQuery } from "@apollo/client";
+
 import Storage from "./Storage";
 import UploaderComponent from "./Uploader";
 import {
@@ -29,7 +31,20 @@ const Fields = {
 
 const HIDE_DROPZONE = -170;
 
-const Main = ({ generateDocument }) => {
+const Main = props => {
+    const { data, loading, error } = useQuery(docsND, {
+        variables: { id: "333" }
+    });
+    console.log("MAIN", props, data, loading, error);
+
+    props.generateDocumentResult.client.cache.writeQuery({
+        query: docsND,
+        data: {
+            docs: [{ id: 2222 }]
+        }
+    });
+
+    const { generateDocument } = props;
     const [files, setFiles] = React.useState();
     const [previewZonebottom, SetPreviewZonebottom] = React.useState(
         HIDE_DROPZONE
