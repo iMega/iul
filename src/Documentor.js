@@ -12,40 +12,43 @@ const list = ({ id }) => {
     };
 };
 
-const newDoc = () => ({
-    id: uuid(),
-    title:
-        "Информационно-удостоверяющий лист для проектно-сметной документации",
-    doc: "",
-    filename: "",
-    num: "1",
-    version: "1",
-    revision: "1",
-    contributors: [
-        {
-            title: "Разраб.",
-            name: "",
-            date: ""
-        },
-        {
-            title: "",
-            name: "",
-            date: ""
-        },
-        {
-            title: "Н.контр.",
-            name: "",
-            date: ""
-        }
-    ],
-    files: [
-        {
-            md5: "",
-            size: "",
-            name: ""
-        }
-    ]
-});
+const newDoc = () => {
+    const date = new Date().toISOString().slice(0, 10);
+    return {
+        id: uuid(),
+        title:
+            "Информационно-удостоверяющий лист для проектно-сметной документации",
+        doc: "",
+        filename: "",
+        num: "1",
+        version: "1",
+        revision: "1",
+        contributors: [
+            {
+                title: "Разраб.",
+                name: "",
+                date: date
+            },
+            {
+                title: "",
+                name: "",
+                date: date
+            },
+            {
+                title: "Н.контр.",
+                name: "",
+                date: date
+            }
+        ],
+        files: [
+            {
+                md5: "",
+                size: "",
+                name: ""
+            }
+        ]
+    };
+};
 
 const openDoc = id => JSON.parse(window.localStorage.getItem(id));
 

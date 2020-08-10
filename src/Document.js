@@ -91,20 +91,20 @@ const Document = ({ doc, saveDoc }) => {
             <TextareaWithLabel
                 label={"Наименование объекта капитального строительства"}
                 rows={2}
-                defaultValue={doc.title}
+                value={doc.title}
                 innerRef={titleRef}
                 onChange={save(titleRef, "title")}
             />
             <InputWithLabel
                 label={"Обозначение документа (тома)"}
-                defaultValue={doc.filename}
+                value={doc.filename}
                 innerRef={fileNameRef}
                 onChange={save(fileNameRef, "filename")}
             />
             <TextareaWithLabel
                 label={"Наименование документа (тома)"}
                 rows={3}
-                defaultValue={doc.doc}
+                value={doc.doc}
                 innerRef={docNameRef}
                 onChange={save(docNameRef, "doc")}
             />
@@ -123,7 +123,7 @@ const Document = ({ doc, saveDoc }) => {
                         <Input
                             innerRef={contributor1Ref}
                             onChange={save(contributor1Ref, "contributor0")}
-                            defaultValue={doc.contributors[0].name}
+                            value={doc.contributors[0].name}
                         />
                     </Area>
                 </Grid>
@@ -143,14 +143,14 @@ const Document = ({ doc, saveDoc }) => {
                                     setGap(v);
                                 }}
                                 options={options}
-                                defaultValue={doc.contributors[1].title}
+                                value={doc.contributors[1].title}
                             />
                         </Area>
                         <Area>
                             <Input
                                 innerRef={contributor2Ref}
                                 onChange={save(contributor2Ref, "contributor1")}
-                                defaultValue={doc.contributors[1].name}
+                                value={doc.contributors[1].name}
                             />
                         </Area>
                     </Grid>
@@ -168,7 +168,7 @@ const Document = ({ doc, saveDoc }) => {
                         <Input
                             innerRef={contributor3Ref}
                             onChange={save(contributor3Ref, "contributor2")}
-                            defaultValue={doc.contributors[2].name}
+                            value={doc.contributors[2].name}
                         />
                     </Area>
                 </Grid>
@@ -188,7 +188,7 @@ const Document = ({ doc, saveDoc }) => {
                                 type={"date"}
                                 innerRef={dateDocRef}
                                 onChange={save(dateDocRef, "date")}
-                                defaultValue={doc.contributors[0].date}
+                                value={doc.contributors[0].date}
                             />
                         </Area>
                         <Area />
