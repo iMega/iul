@@ -82,7 +82,7 @@ const Style = `
     body {
         line-height: 1;
         font-weight: normal;
-        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1600 - 320)));
+        font-size: calc(16px + (18 - 16) * ((100vw - 320px) / (1600 - 320)));
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -139,6 +139,9 @@ const Style = `
         -webkit-box-sizing: content-box;
         -moz-box-sizing: content-box;
         box-sizing: content-box;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
     }
 
     :focus {
@@ -213,6 +216,8 @@ const Style = `
 
     svg {
         fill: currentColor;
+        height: 100%;
+        width: 100%;
     }
 
     /* Normalize. Document
@@ -840,7 +845,7 @@ const Style = `
     min-height: 100px;*/
 }
 .dropzone .dz-preview:hover {
-    z-index: 1000;
+    /*z-index: 1000;*/
 }
 .dropzone .dz-preview:hover .dz-details {
     opacity: 1;
@@ -874,7 +879,7 @@ const Style = `
     opacity: 1;
 }
 .dropzone .dz-preview .dz-details {
-    z-index: 20;
+    /*z-index: 20;*/
     position: absolute;
     top: 0;
     left: 0;
@@ -927,7 +932,7 @@ const Style = `
     height: 6em;
     position: relative;
     display: block;
-    z-index: 10;
+    /*z-index: 10;*/
 }
 .dropzone .dz-preview .dz-image img {
     display: block;
@@ -951,7 +956,7 @@ const Style = `
 .dropzone .dz-preview .dz-error-mark {
     pointer-events: none;
     opacity: 0;
-    z-index: 500;
+    /*z-index: 500;*/
     position: absolute;
     display: block;
     top: 50%;
@@ -990,7 +995,7 @@ const Style = `
 }
 .dropzone .dz-preview .dz-progress {
     opacity: 1;
-    z-index: 1000;
+    /*z-index: 1000;*/
     pointer-events: none;
     position: absolute;
     height: 16px;
@@ -1027,7 +1032,7 @@ const Style = `
 }
 .dropzone .dz-preview .dz-error-message {
     pointer-events: none;
-    z-index: 1000;
+    /*z-index: 1000;*/
     position: absolute;
     display: block;
     display: none;

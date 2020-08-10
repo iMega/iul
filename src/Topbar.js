@@ -11,7 +11,8 @@ const TopBarLayoutStyle = styled.div({
     right: 0,
     display: "grid",
     gridTemplateColumns: "auto minmax(200px, 50em) auto",
-    gridTemplateAreas: `". topbar ."`
+    gridTemplateAreas: `". topbar ."`,
+    zIndex: 1
 });
 
 const TopBarStyle = styled.div({

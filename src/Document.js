@@ -208,10 +208,14 @@ const Document = ({ doc, saveDoc }) => {
                                     <UploadIcon />
                                 </Area>
                             </Area>
-                            <Area display={"grid"} alignContent={"center"}>
+                            <Area
+                                display={"grid"}
+                                alignContent={"center"}
+                                padding={"0 0.2em"}
+                            >
                                 <p>
-                                    Загрузите или перенесите сюда PDF файл не
-                                    более 45 МБ.
+                                    Загрузите или перенесите сюда PDF&nbsp;файл
+                                    не&nbsp;более 45&nbsp;МБ.
                                 </p>
                             </Area>
                         </Area>
