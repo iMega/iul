@@ -153,6 +153,12 @@ const Style = `
  * 2. Remove excess padding in IE 8/9.
  */
 
+    input[type="date"] {
+        -webkit-appearance: menulist;
+        -moz-appearance: menulist;
+        appearance: menulist;
+    }
+
     button,
     input[type="reset"],
     input[type="button"],
