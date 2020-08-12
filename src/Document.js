@@ -23,6 +23,7 @@ const Document = ({ doc, saveDoc }) => {
     const [previewZonebottom, SetPreviewZonebottom] = React.useState(
         HIDE_DROPZONE
     );
+    console.log("=========", curDoc);
     const PreviewZoneRef = React.createRef();
     const save = (ref, field, val) => () => {
         let document;
