@@ -53,6 +53,7 @@ const Document = ({ doc, saveDoc }) => {
         if (Object.keys(curDoc).includes(field) === true) {
             document = { ...curDoc, [field]: ref.current.value };
         }
+        console.log("save", document);
         setCurDoc(document);
         saveDoc(document);
     };
