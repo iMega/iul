@@ -51,7 +51,7 @@ const Document = ({ doc, saveDoc }) => {
         }
 
         if (Object.keys(curDoc).includes(field) === true) {
-            console.log("field", filed);
+            console.log("field", field);
             document = { ...curDoc, [field]: ref.current.value };
         }
         console.log("save", curDoc, document);
