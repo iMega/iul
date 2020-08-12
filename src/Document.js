@@ -270,7 +270,7 @@ const Document = ({ doc, saveDoc }) => {
                 djsConfig={djsConfig}
                 eventHandlers={eventHandlers(
                     SetPreviewZonebottom,
-                    save(ref, "files")
+                    save(null, "files")
                 )}
             />
         </React.Fragment>
