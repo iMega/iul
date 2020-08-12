@@ -97,7 +97,7 @@ const Document = ({ doc, saveDoc }) => {
             />
             <InputWithLabel
                 label={"Обозначение документа (тома)"}
-                value={doc.filename}
+                value={curDoc.filename}
                 innerRef={fileNameRef}
                 onChange={save(fileNameRef, "filename")}
             />
