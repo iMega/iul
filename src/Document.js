@@ -65,6 +65,7 @@ const Document = ({ doc, saveDoc }) => {
                 value: files
             }
         };
+        console.log("setFiles0", curDoc);
         save(ref, "files")();
     };
 
