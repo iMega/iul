@@ -27,7 +27,7 @@ const eventHandlers = (SetPreviewZonebottom, setFile) => ({
     },
     success: (_, { files }) => {
         // const { files } = JSON.parse(body);
-        setFile(files);
+        setFile(null, files);
     },
     queuecomplete: () => {
         SetPreviewZonebottom(
