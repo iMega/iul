@@ -23,9 +23,16 @@ const Document = ({ doc, saveDoc }) => {
     const [previewZonebottom, SetPreviewZonebottom] = React.useState(
         HIDE_DROPZONE
     );
-    console.log("=========", curDoc);
     const PreviewZoneRef = React.createRef();
-    const save = (ref, field, val) => () => {
+    const save = (ref, field, val) => (event, value) => {
+        console.log("=========", event, value);
+        if (value !== undefined) {
+            ref = {
+                current: {
+                    value
+                }
+            };
+        }
         let document;
         if (field === "date") {
             const contributors = [...curDoc.contributors];
@@ -58,16 +65,6 @@ const Document = ({ doc, saveDoc }) => {
         console.log("save", curDoc, document);
         setCurDoc(document);
         saveDoc(document);
-    };
-
-    const setFiles = files => {
-        const ref = {
-            current: {
-                value: files
-            }
-        };
-        console.log("setFiles0", curDoc);
-        save(ref, "files")();
     };
 
     const titleRef = React.createRef();
@@ -271,7 +268,10 @@ const Document = ({ doc, saveDoc }) => {
             <UploaderComponent
                 config={componentConfig}
                 djsConfig={djsConfig}
-                eventHandlers={eventHandlers(SetPreviewZonebottom, setFiles)}
+                eventHandlers={eventHandlers(
+                    SetPreviewZonebottom,
+                    save(ref, "files")
+                )}
             />
         </React.Fragment>
     );
