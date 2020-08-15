@@ -27,20 +27,28 @@ module.exports = {
             // graphql
             "graphql",
             "graphql-anywhere",
-
+            // ],
+            // vendor1: [
             // apollo
             "@apollo/client",
             "apollo-link-rest",
             "apollo-link",
             "node-fetch",
-
+            // ],
+            // vendor2: [
             // emotion
             "@emotion/styled",
             "@emotion/styled-base",
             "emotion",
 
-            "extend",
-            "dropzone"
+            // component
+            "buildo-react-components/lib/RadioGroup",
+            "buildo-react-components/lib/Input",
+
+            //uploader
+            "html5-file-selector",
+            "react-autosize-textarea",
+            "react-dropzone-uploader"
         ]
     },
     output: {

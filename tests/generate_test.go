@@ -55,7 +55,7 @@ var _ = Describe("Generate a pdf", func() {
 			res, bc := helper.PostRequest("http://app:8080/api/gendoc", form)
 			bc()
 
-			Expect(len(res)).To(Equal(11501))
+			Expect(len(res)).To(Equal(11618))
 		})
 	})
 })
