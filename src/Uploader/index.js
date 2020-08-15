@@ -1,260 +1,80 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import extend from "extend";
+import Dropzone from "dropzone";
+
 import { Icon } from "./icon";
 
-let Dropzone = null;
+let DZ = null;
 
-export class UploaderComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { files: [] };
-    }
+const UploaderComponent = props => {
+    console.log("UPL", props);
 
-    /**
-     * Configuration of Dropzone.js. Defaults are
-     * overriden by the 'djsConfig' property
-     * For a full list of possible configurations,
-     * please consult
-     * http://www.dropzonejs.com/#configuration
-     */
-    getDjsConfig() {
-        let options = null;
-        const defaults = {
-            url: this.props.config.postUrl ? this.props.config.postUrl : null
-        };
+    const [files, setFiles] = React.useState([]);
 
-        if (this.props.djsConfig) {
-            options = extend(true, {}, defaults, this.props.djsConfig);
-        } else {
-            options = defaults;
-        }
+    React.useEffect(() => {
+        console.log("++++++++++++DZ");
 
-        return options;
-    }
-
-    /**
-     * React 'componentDidMount' method
-     * Sets up dropzone.js with the component.
-     */
-    componentDidMount() {
-        const options = this.getDjsConfig();
-
-        Dropzone = Dropzone || require("dropzone");
-        Dropzone.autoDiscover = false;
-
-        if (!this.props.config.postUrl && !this.props.eventHandlers.drop) {
-            console.info(
-                'Neither postUrl nor a "drop" eventHandler specified, the React-Dropzone component might misbehave.'
-            );
-        }
-
-        var dropzoneNode =
-            this.props.config.dropzoneSelector || ReactDOM.findDOMNode(this);
-        this.dropzone = new Dropzone(dropzoneNode, options);
-        this.setupEvents();
-    }
-
-    /**
-     * React 'componentWillUnmount'
-     * Removes dropzone.js (and all its globals) if the component is being unmounted
-     */
-    componentWillUnmount() {
-        if (this.dropzone) {
-            const files = this.dropzone.getActiveFiles();
-
-            if (files.length > 0) {
-                // Well, seems like we still have stuff uploading.
-                // This is dirty, but let's keep trying to get rid
-                // of the dropzone until we're done here.
-                this.queueDestroy = true;
-
-                const destroyInterval = window.setInterval(() => {
-                    if (this.queueDestroy === false) {
-                        return window.clearInterval(destroyInterval);
-                    }
-
-                    if (this.dropzone.getActiveFiles().length === 0) {
-                        this.dropzone = this.destroy(this.dropzone);
-                        return window.clearInterval(destroyInterval);
-                    }
-                }, 500);
-            } else {
-                this.dropzone = this.destroy(this.dropzone);
+        DZ = new Dropzone(props.config.dropzoneSelector, {
+            ...props.djsConfig,
+            url: props.config.postUrl
+        });
+        for (const [event, func] of Object.entries(props.eventHandlers)) {
+            if (event === "init") {
+                props.eventHandlers.init(DZ);
+                continue;
             }
-        }
-    }
-
-    /**
-     * React 'componentDidUpdate'
-     * If the Dropzone hasn't been created, create it
-     */
-    componentDidUpdate() {
-        this.queueDestroy = false;
-
-        if (!this.dropzone) {
-            const dropzoneNode =
-                this.props.config.dropzoneSelector ||
-                ReactDOM.findDOMNode(this);
-            this.dropzone = new Dropzone(dropzoneNode, this.getDjsConfig());
-        }
-    }
-
-    /**
-     * React 'componentWillUpdate'
-     * Update Dropzone options each time the component updates.
-     */
-    componentWillUpdate() {
-        let djsConfigObj;
-        let postUrlConfigObj;
-
-        djsConfigObj = this.props.djsConfig ? this.props.djsConfig : {};
-
-        try {
-            postUrlConfigObj = this.props.config.postUrl
-                ? { url: this.props.config.postUrl }
-                : {};
-        } catch (err) {
-            postUrlConfigObj = {};
-        }
-
-        this.dropzone.options = extend(
-            true,
-            {},
-            this.dropzone.options,
-            djsConfigObj,
-            postUrlConfigObj
-        );
-    }
-
-    render() {
-        const icons = [];
-        const { files } = this.state;
-        const { config } = this.props;
-
-        if (
-            config.showFiletypeIcon &&
-            config.iconFiletypes &&
-            (!files || files.length < 1)
-        ) {
-            for (
-                var i = 0;
-                i < this.props.config.iconFiletypes.length;
-                i = i + 1
-            ) {
-                icons.push(
-                    <Icon
-                        filetype={config.iconFiletypes[i]}
-                        key={"icon-component" + i}
-                    />
-                );
+            if (event === "success") {
+                DZ.on(event, props.eventHandlers.success);
+                continue;
             }
+            DZ.on(event, func);
         }
 
-        if (!this.props.config.postUrl && this.props.action) {
-            return (
-                <form action={this.props.action}>
-                    {icons}
-                    {this.props.children}
-                </form>
-            );
-        } else {
-            return (
-                <div>
-                    {" "}
-                    {icons} {this.props.children}{" "}
-                </div>
-            );
-        }
-    }
+        props.eventHandlers.init(DZ);
 
-    /**
-     * Takes event handlers in this.props.eventHandlers
-     * and binds them to dropzone.js events
-     */
-    setupEvents() {
-        const eventHandlers = this.props.eventHandlers;
-
-        if (!this.dropzone || !eventHandlers) return;
-
-        for (var eventHandler in eventHandlers) {
-            if (
-                eventHandlers.hasOwnProperty(eventHandler) &&
-                eventHandlers[eventHandler]
-            ) {
-                // Check if there's an array of event handlers
-                if (
-                    Object.prototype.toString.call(
-                        eventHandlers[eventHandler]
-                    ) === "[object Array]"
-                ) {
-                    for (
-                        var i = 0;
-                        i < eventHandlers[eventHandler].length;
-                        i = i + 1
-                    ) {
-                        // Check if it's an init handler
-                        if (eventHandler === "init") {
-                            eventHandlers[eventHandler][i](this.dropzone);
-                        } else {
-                            this.dropzone.on(
-                                eventHandler,
-                                eventHandlers[eventHandler][i]
-                            );
-                        }
-                    }
-                } else {
-                    if (eventHandler === "init") {
-                        eventHandlers[eventHandler](this.dropzone);
-                    } else {
-                        this.dropzone.on(
-                            eventHandler,
-                            eventHandlers[eventHandler]
-                        );
-                    }
-                }
+        DZ.on("addedfile", file => {
+            if (!file) {
+                return;
             }
-        }
 
-        this.dropzone.on("addedfile", file => {
-            if (!file) return;
-
-            const files = this.state.files || [];
-
-            files.push(file);
-            this.setState({ files });
+            setFiles([...files, file]);
         });
 
-        this.dropzone.on("removedfile", file => {
+        DZ.on("removedfile", file => {
             if (!file) return;
 
-            const files = this.state.files || [];
-            files.forEach((fileInFiles, i) => {
-                if (
-                    fileInFiles.name === file.name &&
-                    fileInFiles.size === file.size
-                ) {
-                    files.splice(i, 1);
+            const fs = files.map(f => {
+                if (f.name === file.name && f.size === file.size) {
+                    return f;
                 }
+                return f;
             });
 
-            this.setState({ files });
+            setFiles(fs);
         });
-    }
 
-    /**
-     * Removes ALL listeners and Destroys dropzone. see https://github.com/enyo/dropzone/issues/1175
-     */
-    destroy(dropzone) {
-        dropzone.off();
-        return dropzone.destroy();
-    }
-}
+        return () => {};
+    }, []);
 
-UploaderComponent.defaultProps = {
-    djsConfig: {},
-    config: {},
-    eventHandlers: {}
+    const icons = [];
+    return (
+        <React.Fragment>
+            <button
+                onClick={() => {
+                    props.eventHandlers.success("", {
+                        files: [{ md5: "sdfsdfsdf" }]
+                    });
+                }}
+            >
+                AAAAAAA
+            </button>
+            <form action={props.action}>
+                {icons}
+                {props.children}
+            </form>
+        </React.Fragment>
+    );
 };
 
 export default UploaderComponent;

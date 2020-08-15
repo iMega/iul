@@ -19,12 +19,7 @@ const Button = styled.button(
             outline: "2px solid #279AF1"
         }
     },
-    props =>
-        (props.disabled && { color: "var(--fontColorDisabled)" }) || {
-            "&:hover": {
-                backgroundColor: "var(--bgColorPanel)"
-            }
-        }
+    props => props.disabled && { color: "var(--fontColorDisabled)" }
 );
 
 const Card = styled.div(
@@ -36,12 +31,7 @@ const Card = styled.div(
         flexDirection: "column",
         overflow: "hidden"
     },
-    props =>
-        (props.disabled && { color: "var(--fontColorDisabled)" }) || {
-            "&:hover": {
-                backgroundColor: "var(--bgColorPanel)"
-            }
-        }
+    props => props.disabled && { color: "var(--fontColorDisabled)" }
 );
 
 const Preview = styled.div(props => ({
@@ -51,7 +41,13 @@ const Preview = styled.div(props => ({
     backgroundRepeat: "no-repeat",
     alignItems: "center",
     justifyContent: "center",
-    display: "flex"
+    display: "flex",
+    backgroundColor: "var(--bgInput)",
+    borderRadius: "4px",
+    margin: "6px",
+    border: "1px solid var(--borderColorWE)",
+    borderBottomColor: "var(--borderColorS)",
+    borderTopColor: "var(--borderColorN)"
 }));
 
 const Caption = styled.div({

@@ -76,7 +76,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		Title: strings.ReplaceAll(in.Title, "\n", "<br>"),
 		Table: row{
 			Num:         in.Num,
-			Document:    in.Files[0].Name,
+			Document:    in.Filename,
 			Description: strings.ReplaceAll(in.Doc, "\n", "<br>"),
 			Version:     in.Version,
 			Left:        in.Revision,
@@ -102,8 +102,9 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote("iul.pdf")+";filename*=UTF-8''"+"iul.pdf")
+	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(in.Filename+"_iul.pdf")+";filename*=UTF-8''"+in.Filename+"_iul.pdf")
 	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("X-Filename", in.Filename+"_iul.pdf")
 }
 
 func generatePDF(tmpl *bytes.Buffer, w io.Writer) error {
@@ -111,7 +112,7 @@ func generatePDF(tmpl *bytes.Buffer, w io.Writer) error {
 	if err != nil {
 		return fmt.Errorf("failed to make instance of PDFGenerator, %s", err)
 	}
-	pdfg.Title.Set("sdfsdfsdf")
+	pdfg.Title.Set("https://iul.imega.ru")
 	pdfg.Orientation.Set(wkhtmltopdf.OrientationPortrait)
 	pdfg.MarginTop.Set(14)
 	pdfg.MarginBottom.Set(33)

@@ -1,6 +1,8 @@
 import React from "react";
 import RadioGroup from "buildo-react-components/lib/RadioGroup";
 import styled from "@emotion/styled";
+import Dropzone from "react-dropzone-uploader";
+import { getDroppedOrSelectedFiles } from "html5-file-selector";
 
 import {
     TextareaWithLabel,
@@ -13,58 +15,118 @@ import {
     TextElipsis
 } from "./Controls";
 import { UploadIcon } from "./Controls/icons";
-import UploaderComponent from "./Uploader";
-import { componentConfig, djsConfig, eventHandlers } from "./Dropzone";
-const HIDE_DROPZONE = -170;
+
+const InputDZ = ({ accept, onFiles, getFilesFromEvent }) => (
+    <label class="dzu-inputLabel">
+        <input
+            class="dzu-input"
+            type="file"
+            accept={accept}
+            onChange={e => {
+                getFilesFromEvent(e).then(chosenFiles => {
+                    onFiles(chosenFiles);
+                });
+            }}
+        />
+    </label>
+);
+
+const Prev = ({ previews, dropzoneProps, files, input }) => (
+    <DropzoneStyle {...dropzoneProps}>
+        <Area display={"grid"} gridTemplateColumns={"1fr 2fr"}>
+            <Area
+                display={"grid"}
+                alignContent={"center"}
+                justifyContent={"end"}
+            >
+                <Area maxWidth={"6em"}>
+                    <UploadIcon />
+                </Area>
+            </Area>
+            <Area display={"grid"} alignContent={"center"} padding={"0 0.2em"}>
+                <p>
+                    Загрузите или перенесите сюда PDF&nbsp;файл не&nbsp;более
+                    45&nbsp;МБ.
+                </p>
+            </Area>
+        </Area>
+        {input}
+        {(files.length > 0 && files[0].meta.status === "error_file_size" && (
+            <div className={"dzu-previewContainer"} onClick={files[0].remove}>
+                <span className="dzu-previewFileNameError">
+                    {files[0].file.name}
+                </span>
+                <span>размер файла более 45 МБ.</span>
+            </div>
+        )) ||
+            previews}
+    </DropzoneStyle>
+);
+
+const MyUploader = ({ save }) => {
+    const getUploadParams = ({ meta }) => {
+        // return { url: "http://nh:8080/api/upload" };
+        return { url: "/api/upload" };
+    };
+
+    const handleChangeStatus = async (fileWithMeta, status) => {
+        if (status !== "done") {
+            return;
+        }
+
+        const { xhr, remove } = fileWithMeta;
+        const resp = await xhr;
+
+        const { files } = JSON.parse(resp.response);
+        save(null, files);
+
+        remove();
+    };
+
+    const getFilesFromEvent = e => {
+        return new Promise(resolve => {
+            getDroppedOrSelectedFiles(e).then(chosenFiles => {
+                resolve(chosenFiles.map(f => f.fileObject));
+            });
+        });
+    };
+
+    return (
+        <Dropzone
+            getUploadParams={getUploadParams}
+            onChangeStatus={handleChangeStatus}
+            canCancel={true}
+            maxFiles={1}
+            multiple={false}
+            accept="application/pdf"
+            LayoutComponent={Prev}
+            InputComponent={InputDZ}
+            maxSizeBytes={1024 * 1024 * 45}
+            getFilesFromEvent={getFilesFromEvent}
+        />
+    );
+};
 
 const Document = ({ doc, saveDoc }) => {
     const [curDoc, setCurDoc] = React.useState(doc);
     const [gap, setGap] = React.useState();
-    const [previewZonebottom, SetPreviewZonebottom] = React.useState(
-        HIDE_DROPZONE
-    );
-    const PreviewZoneRef = React.createRef();
-    const save = (ref, field, val) => (event, value) => {
-        console.log("=========", event, value);
-        if (value !== undefined) {
-            ref = {
-                current: {
-                    value
-                }
-            };
-        }
-        let document;
-        if (field === "date") {
-            const contributors = [...curDoc.contributors];
-            document = {
-                ...curDoc,
-                contributors: contributors.map(c => ({
-                    ...c,
-                    date: ref.current.value
-                }))
-            };
-        }
-        if (field === "keycontributor1") {
-            const contributors = [...curDoc.contributors];
-            contributors[1] = { ...contributors[1], title: val };
-            document = { ...curDoc, contributors };
-        }
-        if (field.startsWith("contributor") === true) {
-            const contributors = [...curDoc.contributors];
-            contributors[field.slice(-1)] = {
-                ...contributors[field.slice(-1)],
-                name: ref.current.value
-            };
-            document = { ...curDoc, contributors };
-        }
 
-        if (Object.keys(curDoc).includes(field) === true) {
-            console.log("field", field, curDoc);
-            document = { ...curDoc, [field]: ref.current.value };
-        }
-        console.log("save", curDoc, document);
-        setCurDoc(document);
-        saveDoc(document);
+    React.useEffect(() => {
+        doc.id !== curDoc.id && setCurDoc(doc);
+    }, [doc.id]);
+
+    const save = (ref, field, val) => {
+        return (_, f) => {
+            const document = makeDocument(
+                curDoc,
+                field,
+                f || val || ref.current.value
+            );
+
+            console.log("save", document);
+            setCurDoc(document);
+            saveDoc(document);
+        };
     };
 
     const titleRef = React.createRef();
@@ -92,7 +154,7 @@ const Document = ({ doc, saveDoc }) => {
             <TextareaWithLabel
                 label={"Наименование объекта капитального строительства"}
                 rows={2}
-                value={doc.title}
+                value={curDoc.title}
                 innerRef={titleRef}
                 onChange={save(titleRef, "title")}
             />
@@ -101,11 +163,12 @@ const Document = ({ doc, saveDoc }) => {
                 value={curDoc.filename}
                 innerRef={fileNameRef}
                 onChange={save(fileNameRef, "filename")}
+                autoComplete="on"
             />
             <TextareaWithLabel
                 label={"Наименование документа (тома)"}
                 rows={3}
-                value={doc.doc}
+                value={curDoc.doc}
                 innerRef={docNameRef}
                 onChange={save(docNameRef, "doc")}
             />
@@ -124,7 +187,7 @@ const Document = ({ doc, saveDoc }) => {
                         <Input
                             innerRef={contributor1Ref}
                             onChange={save(contributor1Ref, "contributor0")}
-                            value={doc.contributors[0].name}
+                            value={curDoc.contributors[0].name}
                         />
                     </Area>
                 </Grid>
@@ -144,14 +207,14 @@ const Document = ({ doc, saveDoc }) => {
                                     setGap(v);
                                 }}
                                 options={options}
-                                value={doc.contributors[1].title}
+                                value={curDoc.contributors[1].title}
                             />
                         </Area>
                         <Area>
                             <Input
                                 innerRef={contributor2Ref}
                                 onChange={save(contributor2Ref, "contributor1")}
-                                value={doc.contributors[1].name}
+                                value={curDoc.contributors[1].name}
                             />
                         </Area>
                     </Grid>
@@ -169,7 +232,7 @@ const Document = ({ doc, saveDoc }) => {
                         <Input
                             innerRef={contributor3Ref}
                             onChange={save(contributor3Ref, "contributor2")}
-                            value={doc.contributors[2].name}
+                            value={curDoc.contributors[2].name}
                         />
                     </Area>
                 </Grid>
@@ -189,7 +252,7 @@ const Document = ({ doc, saveDoc }) => {
                                 type={"date"}
                                 innerRef={dateDocRef}
                                 onChange={save(dateDocRef, "date")}
-                                value={doc.contributors[0].date}
+                                value={curDoc.contributors[0].date}
                             />
                         </Area>
                         <Area />
@@ -198,35 +261,7 @@ const Document = ({ doc, saveDoc }) => {
             </Bumper>
             <Bumper>
                 <Grid>
-                    <Dropzone id={"dropzone"}>
-                        <Area display={"grid"} gridTemplateColumns={"1fr 2fr"}>
-                            <Area
-                                display={"grid"}
-                                alignContent={"center"}
-                                justifyContent={"end"}
-                            >
-                                <Area maxWidth={"6em"}>
-                                    <UploadIcon />
-                                </Area>
-                            </Area>
-                            <Area
-                                display={"grid"}
-                                alignContent={"center"}
-                                padding={"0 0.2em"}
-                            >
-                                <p>
-                                    Загрузите или перенесите сюда PDF&nbsp;файл
-                                    не&nbsp;более 45&nbsp;МБ.
-                                </p>
-                            </Area>
-                        </Area>
-                        <PreviewZone
-                            id={"preview"}
-                            className="filepicker dropzone"
-                            $bottom={previewZonebottom}
-                            ref={PreviewZoneRef}
-                        />
-                    </Dropzone>
+                    <MyUploader save={save(null, "files", null)} />
                 </Grid>
                 <Bumper>
                     <Grid gridTemplateColumns={"1fr 2fr"}>
@@ -243,7 +278,7 @@ const Document = ({ doc, saveDoc }) => {
                             alignContent={"center"}
                             padding={"0.5em"}
                         >
-                            <span>{doc.files[0].md5}</span>
+                            <span>{curDoc.files[0].md5}</span>
                         </Area>
                     </Grid>
                 </Bumper>
@@ -261,23 +296,45 @@ const Document = ({ doc, saveDoc }) => {
                         alignContent={"center"}
                         padding={"0.5em"}
                     >
-                        <span>{doc.files[0].size}</span>
+                        <span>{curDoc.files[0].size}</span>
                     </Area>
                 </Grid>
             </Bumper>
-            <UploaderComponent
-                config={componentConfig}
-                djsConfig={djsConfig}
-                eventHandlers={eventHandlers(
-                    SetPreviewZonebottom,
-                    save(null, "files")
-                )}
-            />
         </React.Fragment>
     );
 };
 
-const Dropzone = styled.div({
+const makeDocument = (doc, field, value) => {
+    let document;
+    if (field === "date") {
+        const contributors = [...doc.contributors];
+        document = {
+            ...doc,
+            contributors: contributors.map(c => ({ ...c, date: value }))
+        };
+    }
+    if (field === "keycontributor1") {
+        const contributors = [...doc.contributors];
+        contributors[1] = { ...contributors[1], title: value };
+        document = { ...doc, contributors };
+    }
+    if (field.startsWith("contributor") === true) {
+        const contributors = [...doc.contributors];
+        contributors[field.slice(-1)] = {
+            ...contributors[field.slice(-1)],
+            name: value
+        };
+        document = { ...doc, contributors };
+    }
+
+    if (Object.keys(doc).includes(field) === true) {
+        document = { ...doc, [field]: value };
+    }
+
+    return document;
+};
+
+const DropzoneStyle = styled.div({
     cursor: "pointer",
     height: "6em",
     overflow: "hidden",
@@ -289,29 +346,5 @@ const Dropzone = styled.div({
         border: "2px solid #279AF1"
     }
 });
-
-const PreviewZone = styled.div(
-    {
-        left: 0,
-        position: "absolute",
-        right: 0
-    },
-    props => {
-        if (props.$bottom === 0) {
-            return {
-                bottom: props.$bottom,
-                transitionDelay: "0s"
-            };
-        } else {
-            return {
-                bottom: `${props.$bottom}px`,
-                transitionDelay: "2s",
-                transitionDuration: "0.4s",
-                transitionProperty: "bottom",
-                transitionTimingFunction: "ease-in-out"
-            };
-        }
-    }
-);
 
 export default Document;

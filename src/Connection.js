@@ -21,7 +21,7 @@ const restLink = new RestLink({
             uri: "/api",
             responseTransformer: async response => {
                 response.blob().then(blob => {
-                    console.log("BLOB", blob);
+                    console.log("BLOB", blob, response.headers);
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
                     link.download = "iul.pdf";

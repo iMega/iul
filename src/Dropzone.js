@@ -2,8 +2,8 @@ let DropZ = undefined;
 
 const componentConfig = {
     dropzoneSelector: "#dropzone",
-    // postUrl: "http://nh:80/api/upload"
-    postUrl: "/api/upload"
+    postUrl: "http://nh:8080/api/upload"
+    // postUrl: "/api/upload"
 };
 
 const djsConfig = {
@@ -11,7 +11,7 @@ const djsConfig = {
     previewsContainer: "div#preview"
 };
 
-const eventHandlers = (SetPreviewZonebottom, setFile) => ({
+const eventHandlers = (SetPreviewZonebottom, setFiles, curDoc, setCurDoc) => ({
     init: dz => (DropZ = dz),
     addedfile: file => {
         SetPreviewZonebottom(0);
@@ -26,8 +26,8 @@ const eventHandlers = (SetPreviewZonebottom, setFile) => ({
         formData.append("key", file.key);
     },
     success: (_, { files }) => {
-        // const { files } = JSON.parse(body);
-        setFile(null, files);
+        console.log("SUC", curDoc(), files);
+        setFiles(null, files);
     },
     queuecomplete: () => {
         SetPreviewZonebottom(

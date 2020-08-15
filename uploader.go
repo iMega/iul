@@ -18,6 +18,19 @@ type fileInfo struct {
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	// if r.Method == http.MethodOptions {
+	// 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	// 	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST")
+	// 	w.Header().Set("Access-Control-Allow-Headers", "*")
+	// 	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	// 	w.Header().Set("Access-Control-Max-Age", "1800")
+	// 	w.Header().Set("Content-Type", "text/plain; charset=utf-8';")
+	// 	w.Header().Set("Content-Length", "0")
+	// 	w.WriteHeader(204)
+	// 	return
+	// }
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	ctx := r.Context()
 	logger := ctxlogrus.Extract(ctx)
 
