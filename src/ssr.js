@@ -11,6 +11,8 @@ import Normalize from "./Normalize.js";
 const r = renderToStringWithData(<Connection />).then(content => {
     const { ids, css, html } = extractCritical(content);
     const tag = process.env.TAG || "latest";
+    // const modules = ["core", "react", "graphql", "apollo", "uuid", "emotion"];
+    const modules = ["vendor"];
     return ReactDOM.renderToString(
         <React.Fragment>
             <html>
@@ -129,7 +131,9 @@ const r = renderToStringWithData(<Connection />).then(content => {
                 </head>
                 <body>
                     <div id="root" dangerouslySetInnerHTML={{ __html: html }} />
-                    <script src={`/${tag}/vendor.js`} />
+                    {modules.map(m => (
+                        <script key={m} src={`/${tag}/${m}.js`} />
+                    ))}
                     <script src={`/${tag}/client.js`} />
                 </body>
             </html>

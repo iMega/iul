@@ -1,4 +1,4 @@
 node_modules
 dist
-manifest.vendor.json
+manifest.*.json
 vendor

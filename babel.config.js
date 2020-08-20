@@ -11,10 +11,16 @@ module.exports = {
         [
             "@babel/preset-env",
             {
-                corejs: 3,
-                useBuiltIns: "usage",
+                corejs: { version: 3, proposals: false },
+                useBuiltIns: "entry",
                 targets: {
-                    node: "current"
+                    node: "current",
+                    browsers: [
+                        "Chrome >= 71",
+                        "iOS >= 11",
+                        "Safari >= 11",
+                        "Firefox >= 60"
+                    ]
                 }
             }
         ]
@@ -31,7 +37,10 @@ module.exports = {
         "@babel/plugin-proposal-nullish-coalescing-operator",
         ["@babel/plugin-proposal-class-properties", { loose: true }],
         "@babel/plugin-transform-runtime",
-        "@babel/plugin-proposal-object-rest-spread",
+        // [
+        //     "@babel/plugin-proposal-object-rest-spread",
+        //     { loose: false, useBuiltIns: true }
+        // ],
         "transform-react-remove-prop-types"
     ]
 };

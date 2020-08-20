@@ -1,6 +1,18 @@
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+    .BundleAnalyzerPlugin;
 const CopyPlugin = require("copy-webpack-plugin");
+
+const multipleManifest = manifestNames =>
+    manifestNames.map(
+        name =>
+            new webpack.DllReferencePlugin({
+                context: __dirname,
+                manifest: require(`./manifest.${name}.json`),
+                name: name
+            })
+    );
 
 module.exports = {
     entry: {
@@ -17,7 +29,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.jsx?$/,
+                test: /\.(js|jsx|mjs)$/,
                 exclude: /node_modules/,
                 use: {
                     loader: "babel-loader"
@@ -30,11 +42,16 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.DllReferencePlugin({
-            context: __dirname,
-            manifest: require("./manifest.vendor.json"),
-            name: "vendor"
-        }),
+        // new BundleAnalyzerPlugin(),
+        ...multipleManifest([
+            "vendor"
+            // "core",
+            // "react",
+            // "graphql",
+            // "apollo",
+            // "uuid",
+            // "emotion"
+        ]),
         new CopyPlugin({
             patterns: [{ from: "src/icons" }]
         })
