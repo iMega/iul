@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/improbable-eng/go-httpwares/logging/logrus/ctxlogrus"
@@ -137,7 +138,8 @@ func generateTemplateHTML(w io.Writer, s sheet) error {
 	}
 
 	var fn = template.FuncMap{
-		"noescape": noescape,
+		"noescape":   noescape,
+		"dateFormat": dateFormat,
 	}
 
 	l, err := template.New("layout").Funcs(fn).Parse(string(layout))
@@ -149,4 +151,13 @@ func generateTemplateHTML(w io.Writer, s sheet) error {
 
 func noescape(str string) template.HTML {
 	return template.HTML(str)
+}
+
+func dateFormat(str string) template.HTML {
+	t, err := time.Parse("2006-01-02", str)
+	if err != nil {
+		return template.HTML(str)
+	}
+
+	return template.HTML(t.Format("02.01.2006"))
 }

@@ -2,23 +2,10 @@ import React from "react";
 import { Global, css } from "@emotion/core";
 
 const Theme = () => {
-    const [theme, setTheme] = React.useState(getTheme());
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setTheme(getTheme());
-        }, 10 * 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    return <Global styles={css({ ":root": theme })} />;
+    return <Global styles={css({ ":root": getTheme() })} />;
 };
 
-const getTheme = () => {
-    const date = new Date();
-    const ld = date.getHours() >= 7 && date.getHours() <= 21;
-    // const ld = date.getSeconds() >= 0 && date.getSeconds() <= 30;
-    return ld === true ? light : dark;
-};
+const getTheme = () => light;
 
 const light = {
     "--tr":

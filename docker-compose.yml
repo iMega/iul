@@ -6,6 +6,8 @@ services:
     environment:
       - HTTP_READTIMEOUT=150
       - HTTP_WRITETIMEOUT=120
+      - LOG_LEVEL=debug
+      - COMMIT=${TAG}
     ports:
       - 8080:8080
 
