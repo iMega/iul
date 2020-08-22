@@ -53,32 +53,32 @@ const r = renderToStringWithData(<Connection />).then(content => {
                     <link
                         rel="apple-touch-icon"
                         sizes="114x114"
-                        href={`/${tag}/iul_logo_00114.png`}
+                        href={`/${tag}/iul_logo_0114.png`}
                     />
                     <link
                         rel="apple-touch-icon"
                         sizes="120x120"
-                        href={`/${tag}/iul_logo_00120.png`}
+                        href={`/${tag}/iul_logo_0120.png`}
                     />
                     <link
                         rel="apple-touch-icon"
                         sizes="144x144"
-                        href={`/${tag}/iul_logo_00144.png`}
+                        href={`/${tag}/iul_logo_0144.png`}
                     />
                     <link
                         rel="apple-touch-icon"
                         sizes="152x152"
-                        href={`/${tag}/iul_logo_00152.png`}
+                        href={`/${tag}/iul_logo_0152.png`}
                     />
                     <link
                         rel="apple-touch-icon"
                         sizes="180x180"
-                        href={`/${tag}/iul_logo_00180.png`}
+                        href={`/${tag}/iul_logo_0180.png`}
                     />
                     <link
                         rel="apple-touch-icon"
                         sizes="512x512"
-                        href={`/${tag}/iul_logo_00512.png`}
+                        href={`/${tag}/iul_logo_0512.png`}
                     />
                     <link
                         rel="icon"
@@ -102,13 +102,13 @@ const r = renderToStringWithData(<Connection />).then(content => {
                         rel="icon"
                         type="image/png"
                         sizes="144x144"
-                        href={`/${tag}/iul_logo_00144.png`}
+                        href={`/${tag}/iul_logo_0144.png`}
                     />
                     <link
                         rel="icon"
                         type="image/png"
                         sizes="192x192"
-                        href={`/${tag}/iul_logo_00192.png`}
+                        href={`/${tag}/iul_logo_0192.png`}
                     />
                     <link
                         rel="icon"
