@@ -99,6 +99,7 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 
 	filename := strings.TrimSuffix(in.Files[0].Name, ".pdf")
 	filename = strconv.QuoteToASCII(filename + "_ИУЛ")
+	filename = strings.Trim(filename, `"`)
 	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(filename+".pdf")+";filename*=UTF-8''"+filename+".pdf")
 	w.Header().Set("Content-Type", "application/pdf;charset=UTF-8")
 	w.Header().Set("X-Filename", filename+".pdf")
