@@ -97,15 +97,15 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(in.Filename+"_iul.pdf")+";filename*=UTF-8''"+in.Filename+"_iul.pdf")
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("X-Filename", in.Filename+"_iul.pdf")
+
 	if err := generatePDF(tmpl, w); err != nil {
 		logger.Errorf("failed to create pdf, %s", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(in.Filename+"_iul.pdf")+";filename*=UTF-8''"+in.Filename+"_iul.pdf")
-	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("X-Filename", in.Filename+"_iul.pdf")
 }
 
 func generatePDF(tmpl *bytes.Buffer, w io.Writer) error {
