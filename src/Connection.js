@@ -21,6 +21,11 @@ const restLink = new RestLink({
             uri: "/api",
             responseTransformer: async (response) => {
                 response.blob().then((blob) => {
+                    console.log(
+                        "BLOB",
+                        response.headers.get("x-filename"),
+                        response.headers.get("x-filename").normalize("NFC")
+                    );
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
                     link.download = response.headers
