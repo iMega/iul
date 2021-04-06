@@ -23,7 +23,7 @@ const restLink = new RestLink({
                 response.blob().then((blob) => {
                     console.log(
                         "BLOB",
-                        response.headers.get("x-filename"),
+                        response.headers,
                         response.headers.get("x-filename").normalize("NFC")
                     );
                     const link = document.createElement("a");
