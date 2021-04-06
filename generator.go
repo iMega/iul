@@ -97,9 +97,10 @@ func generateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(in.Filename+"_iul.pdf")+";filename*=UTF-8''"+in.Filename+"_iul.pdf")
+	filename := strings.TrimSuffix(in.Files[0].Name, ".pdf")
+	w.Header().Set("Content-Disposition", "attachment;filename="+strconv.Quote(filename+"_iul.pdf")+";filename*=UTF-8''"+filename+"_iul.pdf")
 	w.Header().Set("Content-Type", "application/pdf")
-	w.Header().Set("X-Filename", in.Filename+"_iul.pdf")
+	w.Header().Set("X-Filename", filename+"_ИУЛ.pdf")
 
 	if err := generatePDF(tmpl, w); err != nil {
 		logger.Errorf("failed to create pdf, %s", err)

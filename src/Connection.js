@@ -3,7 +3,7 @@ import {
     ApolloProvider,
     ApolloClient,
     ApolloLink,
-    InMemoryCache
+    InMemoryCache,
 } from "@apollo/client";
 import { RestLink } from "apollo-link-rest";
 
@@ -19,33 +19,37 @@ const restLink = new RestLink({
     endpoints: {
         api: {
             uri: "/api",
-            responseTransformer: async response => {
-                response.blob().then(blob => {
-                    console.log("BLOB", blob, response.headers);
+            responseTransformer: async (response) => {
+                response.blob().then((blob) => {
+                    console.log(
+                        "BLOB",
+                        blob,
+                        response.headers.get("x-filename")
+                    );
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "iul.pdf";
+                    link.download = response.headers.get("x-filename");
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 });
-            }
-        }
+            },
+        },
     },
-    credentials: "same-origin"
+    credentials: "same-origin",
 });
 
 const cache = new InMemoryCache({
     typePolicies: {
         Query: {
-            fields: { docs: { read: Documentor.read } }
-        }
-    }
+            fields: { docs: { read: Documentor.read } },
+        },
+    },
 });
 
 const client = new ApolloClient({
     link: ApolloLink.from([restLink]),
-    cache
+    cache,
 });
 
 const Connection = () => (
