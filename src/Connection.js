@@ -24,13 +24,18 @@ const restLink = new RestLink({
                     console.log(
                         "BLOB",
                         response.headers,
-                        response.headers.get("x-filename").normalize("NFC")
+                        response.headers.get("x-filename").normalize("NFC"),
+                        unescape(
+                            response.headers
+                                .get("x-filename")
+                                .replace(/\\/g, "%")
+                        )
                     );
                     const link = document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = response.headers
-                        .get("x-filename")
-                        .normalize("NFC");
+                    link.download = unescape(
+                        response.headers.get("x-filename").replace(/\\/g, "%")
+                    );
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
